@@ -102,7 +102,6 @@ struct atoms
     ERL_NIF_TERM atomClusterSettingSslPrivateKey;
     ERL_NIF_TERM atomClusterSettingRetryPolicy;
     ERL_NIF_TERM atomClusterSettingRetryPolicyDefault;
-    ERL_NIF_TERM atomClusterSettingRetryPolicyDowngradingConsistency;
     ERL_NIF_TERM atomClusterSettingRetryPolicyFallthrough;
 };
 
