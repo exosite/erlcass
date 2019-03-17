@@ -54,7 +54,7 @@ ifeq ($(UNAME_SYS), darwin)
 				-Wl,-U,_enif_make_ulong
 endif
 
-CXXFLAGS+=  -g -std=c++11 -Wextra -Werror -fno-rtti \
+CXXFLAGS+= -O3 -std=c++11 -Wextra -Werror -fno-rtti \
 			-Wno-unused-local-typedefs -Wno-unused-parameter -Wno-missing-field-initializers \
             -I $(BASEDIR)/_build/deps/cpp-driver/include \
             -I $(BASEDIR)/_build/deps/cpp-driver/src \
