@@ -57,7 +57,7 @@ else
 	CXXFLAGS+= -Wno-class-memaccess
 endif
 
-CXXFLAGS+=  -g -std=c++11 -Wextra -Werror -fno-rtti \
+CXXFLAGS+= -O3 -std=c++11 -Wextra -Werror -fno-rtti \
 			-Wno-unused-local-typedefs -Wno-unused-parameter -Wno-missing-field-initializers \
             -I $(BASEDIR)/_build/deps/cpp-driver/include \
             -I $(BASEDIR)/_build/deps/cpp-driver/src \
