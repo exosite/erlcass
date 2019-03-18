@@ -191,7 +191,7 @@ ERL_NIF_TERM nif_cass_statement_set_paging_size(ErlNifEnv* env, int argc, const 
 
     int page_size = 0;
 
-    if(!enif_get_int(env, argv[1], &page_size) || (page_size < 1))
+    if((!enif_get_int(env, argv[1], &page_size)) || (page_size < 1))
         return make_badarg(env);
 
     cass_statement_set_paging_size(enif_stm->statement, page_size);
