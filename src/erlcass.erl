@@ -267,7 +267,7 @@ execute(Identifier, BindType, Params) ->
     ok | {error, reason()}.
 
 set_paging_size(Stm, PageSize) ->
-    erlcass_nif:cass_statement_set_paging_size(Stm, PageSize).
+    erlcass_nif:cass_statement_set_paging_size(Stm#erlcass_stm.stm, PageSize).
 
 -spec async_execute_paged(statement_ref(), atom()) ->
     {ok, tag()} | {error, reason()}.
