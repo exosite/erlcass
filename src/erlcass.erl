@@ -65,13 +65,14 @@
 -record(erlcass_stm, {session, stm}).
 -record(state, {session}).
 
--type query()           :: binary() | {binary(), integer()} | {binary(), list()}.
--type statement_ref()   :: #erlcass_stm{}.
--type bind_type()       :: ?BIND_BY_INDEX | ?BIND_BY_NAME.
--type batch_type()      :: ?CASS_BATCH_TYPE_LOGGED | ?CASS_BATCH_TYPE_UNLOGGED | ?CASS_BATCH_TYPE_COUNTER.
--type tag()             :: reference().
--type recv_pid()        :: pid() | null.
--type query_result()    :: ok | {ok, list(), list()} | {error, reason()}.
+-type query()               :: binary() | {binary(), integer()} | {binary(), list()}.
+-type statement_ref()       :: #erlcass_stm{}.
+-type bind_type()           :: ?BIND_BY_INDEX | ?BIND_BY_NAME.
+-type batch_type()          :: ?CASS_BATCH_TYPE_LOGGED | ?CASS_BATCH_TYPE_UNLOGGED | ?CASS_BATCH_TYPE_COUNTER.
+-type tag()                 :: reference().
+-type recv_pid()            :: pid() | null.
+-type query_result()        :: ok | {ok, list(), list()} | {error, reason()}.
+-type paged_query_result()  :: {ok, list(), list(), boolean()} | {error, reason()}.
 
 -spec get_metrics() ->
     {ok, list()} | {error, reason()}.
@@ -294,7 +295,7 @@ async_execute_paged(Stm, Identifier, ReceiverPid) ->
     end.
 
 -spec execute_paged(statement_ref(), atom()) ->
-    query_result().
+    paged_query_result().
 
 execute_paged(Stm, Identifier) ->
     case async_execute_paged(Stm, Identifier) of
@@ -416,10 +417,14 @@ receive_response(Tag) ->
 
 receive_paged_response(Tag) ->
     receive
-        {paged_execute_statement_result, Tag, Result} ->
-            {Result, false};
-        {paged_execute_statement_result_has_more, Tag, Result} ->
-            {Result, true}
+        {paged_execute_statement_result, Tag, {ok, Columns, Rows}} ->
+            {ok, Columns, Rows, false};
+        {paged_execute_statement_result_has_more, Tag, {ok, Columns, Rows}} ->
+            {ok, Columns, Rows, true};
+        {paged_execute_statement_result, Tag, Error} ->
+            Error;
+        {paged_execute_statement_result_has_more, Tag, Error} ->
+            Error
 
     after ?RESPONSE_TIMEOUT ->
         {error, timeout}
