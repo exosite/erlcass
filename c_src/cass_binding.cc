@@ -129,7 +129,6 @@ template <typename T> ERL_NIF_TERM cass_set_from_nif(ErlNifEnv* env, T obj, size
             if(get_bstring(env, value, &bin)) {
                 return cass_error_to_nif_term(env, fun.set_string(obj, index, BIN_TO_STR(bin.data), bin.size));
             } else if((atom_size = get_atom(env, value, atom, MAX_ATOM_SIZE)) && atom_size > 0) {
-                printf("add atom: '%s' size: %d\n", atom, atom_size);
                 return cass_error_to_nif_term(env, fun.set_string(obj, index, atom, atom_size + 1));
             }
             
