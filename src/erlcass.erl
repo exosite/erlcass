@@ -475,7 +475,12 @@ session_create() ->
                             case receive_session_connect("", Self) of
                                 ok ->
                                     ?INFO_MSG("Creating Keyspace '~s'", [Keyspace]),
-                                    ok = query(KeyspaceCQL),
+                                    ok = case query_async(KeyspaceCQL) of
+                                            {ok, Tag} ->
+                                                receive_response(Tag);
+                                            Error ->
+                                                Error
+                                        end,
                                     ?INFO_MSG("Keyspace '~s' Created", [Keyspace]),
                                     ok = do_close(Session, Self, 5000),
                                     ?INFO_MSG("Session Closed", [Keyspace]);
