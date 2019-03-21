@@ -474,13 +474,10 @@ session_create() ->
                             ok = do_connect(Session, Self),
                             case receive_session_connect("", Self) of
                                 ok ->
+                                    {ok, StmRef} = query_new_statement(KeyspaceCQL),
                                     ?INFO_MSG("Creating Keyspace '~s'", [Keyspace]),
-                                    ok = case query_async(KeyspaceCQL) of
-                                            {ok, Tag} ->
-                                                receive_response(Tag);
-                                            Error ->
-                                                Error
-                                        end,
+                                    erlcass_nif:cass_session_execute(nil, Session, StmRef, Self, init_keyspace),
+                                    ok = receive_response(init_keyspace),
                                     ?INFO_MSG("Keyspace '~s' Created", [Keyspace]),
                                     ok = do_close(Session, Self, 5000),
                                     ?INFO_MSG("Session Closed", [Keyspace]);
