@@ -489,7 +489,7 @@ session_create() ->
     end.
 
 receive_session_connect(Keyspace, Self) ->
-    MissingKeyspaceError = "Keyspace '" + Keyspace + "' does not exist",
+    MissingKeyspaceError = lists:flatten(io_lib:format("Keyspace '~s' does not exist", [Keyspace])),
     receive
         {session_connected, Self, {error, MissingKeyspaceError}} ->
             {error, missing_keyspace};
