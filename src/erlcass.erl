@@ -473,7 +473,8 @@ session_create() ->
                             ?INFO_MSG("Keyspace '~s' is missing, will create using: '~s'", [Keyspace, KeyspaceCQL]),
                             ok = do_connect(Session, Self),
                             case receive_session_connect("", Self) of
-                                ok -> 
+                                ok ->
+                                    ?INFO_MSG("Creating Keyspace '~s'", [Keyspace]),
                                     ok = query(KeyspaceCQL),
                                     ok = do_close(Session, Self, 5000);
                                 Error -> Error
