@@ -476,7 +476,9 @@ session_create() ->
                                 ok ->
                                     ?INFO_MSG("Creating Keyspace '~s'", [Keyspace]),
                                     ok = query(KeyspaceCQL),
-                                    ok = do_close(Session, Self, 5000);
+                                    ?INFO_MSG("Keyspace '~s' Created", [Keyspace]),
+                                    ok = do_close(Session, Self, 5000),
+                                    ?INFO_MSG("Session Closed", [Keyspace]);
                                 Error -> Error
                             end,
                             ok = do_connect(Session, Self, Keyspace),
