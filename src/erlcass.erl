@@ -483,7 +483,9 @@ session_create() ->
                                     ?INFO_MSG("Session Closed", []);
                                 Error -> Error
                             end,
+                            ?INFO_MSG("Reconnecting with Keyspace", []),
                             ok = do_connect(Session, Self, Keyspace),
+                            ?INFO_MSG("Waiting for coonection", []),
                             receive_session_connect(Keyspace, Self);
                         Error -> Error
                     end;
