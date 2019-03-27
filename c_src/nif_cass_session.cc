@@ -10,6 +10,7 @@
 
 #include <string.h>
 #include <memory>
+#include <chrono>
 
 struct enif_cass_session
 {
@@ -23,6 +24,7 @@ struct callback_info
     ERL_NIF_TERM arguments;
     bool fire_and_forget;
     CassStatement* paged_statment;
+    uint64_t start_time;
 };
 
 struct callback_statement_info
@@ -34,6 +36,12 @@ struct callback_statement_info
     ConsistencyLevelOptions consistency;
     CassSession* session;
 };
+
+uint64_t get_microseconds() 
+{
+    return std::chrono::duration_cast<std::chrono::microseconds>
+              (std::chrono::high_resolution_clock::now().time_since_epoch()).count();
+}
 
 callback_info* callback_info_alloc(ErlNifEnv* env, const ErlNifPid& pid, ERL_NIF_TERM arg)
 {
@@ -139,6 +147,9 @@ void on_statement_executed(CassFuture* future, void* user_data)
     callback_info* cb = static_cast<callback_info*>(user_data);
 
     cass_bool_t has_more_pages = cass_false;
+    uint64_t now = get_microseconds();
+
+    cass::Logger::log(CASS_LOG_WARN, __FILE__, __LINE__, __FUNCTION__, "execution took %lu us", now - cb->start_time);
 
     if(cb->fire_and_forget)
     {
@@ -462,6 +473,8 @@ ERL_NIF_TERM nif_cass_session_execute_batch(ErlNifEnv* env, int argc, const ERL_
 
     if(callback == NULL)
         return make_error(env, erlcass::kFailedToCreateCallbackInfoMsg);
+
+    callback->start_time = get_microseconds();
 
     CassFuture* future = cass_session_execute_batch(enif_session->session, batch.get());
     error = cass_future_set_callback(future, on_statement_executed, callback);
