@@ -26,6 +26,7 @@ ifeq ($(UNAME_SYS), darwin)
 				-Wl,-U,_enif_is_tuple \
 				-Wl,-U,_enif_is_atom \
 				-Wl,-U,_enif_is_list \
+				-Wl,-U,_enif_get_atom \
 				-Wl,-U,_enif_get_int \
 				-Wl,-U,_enif_get_list_cell \
 				-Wl,-U,_enif_get_resource \
