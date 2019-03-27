@@ -37,12 +37,6 @@ struct callback_statement_info
     CassSession* session;
 };
 
-uint64_t get_microseconds() 
-{
-    return std::chrono::duration_cast<std::chrono::microseconds>
-              (std::chrono::high_resolution_clock::now().time_since_epoch()).count();
-}
-
 callback_info* callback_info_alloc(ErlNifEnv* env, const ErlNifPid& pid, ERL_NIF_TERM arg)
 {
     callback_info* callback = static_cast<callback_info*>(enif_alloc(sizeof(callback_info)));
@@ -51,7 +45,6 @@ callback_info* callback_info_alloc(ErlNifEnv* env, const ErlNifPid& pid, ERL_NIF
     callback->arguments = enif_make_copy(callback->env, arg);
     callback->fire_and_forget = false;
     callback->paged_statment = NULL;
-    callback->start_time = get_microseconds();
     return callback;
 }
 
@@ -62,7 +55,6 @@ callback_info* callback_info_alloc(ErlNifEnv* env, ERL_NIF_TERM identifier)
     callback->arguments = enif_make_copy(callback->env, identifier);
     callback->fire_and_forget = true;
     callback->paged_statment = NULL;
-    callback->start_time = get_microseconds();
     return callback;
 }
 
@@ -149,9 +141,6 @@ void on_statement_executed(CassFuture* future, void* user_data)
     callback_info* cb = static_cast<callback_info*>(user_data);
 
     cass_bool_t has_more_pages = cass_false;
-    uint64_t now = get_microseconds();
-
-    printf("execution took %lu us\n", (now - cb->start_time));
 
     if(cb->fire_and_forget)
     {
