@@ -51,6 +51,7 @@ callback_info* callback_info_alloc(ErlNifEnv* env, const ErlNifPid& pid, ERL_NIF
     callback->arguments = enif_make_copy(callback->env, arg);
     callback->fire_and_forget = false;
     callback->paged_statment = NULL;
+    callback->start_time = get_microseconds();
     return callback;
 }
 
@@ -61,6 +62,7 @@ callback_info* callback_info_alloc(ErlNifEnv* env, ERL_NIF_TERM identifier)
     callback->arguments = enif_make_copy(callback->env, identifier);
     callback->fire_and_forget = true;
     callback->paged_statment = NULL;
+    callback->start_time = get_microseconds();
     return callback;
 }
 
@@ -149,7 +151,7 @@ void on_statement_executed(CassFuture* future, void* user_data)
     cass_bool_t has_more_pages = cass_false;
     uint64_t now = get_microseconds();
 
-    printf("execution took %lu us\n", now - cb->start_time);
+    printf("execution took %lu us\n", (now - cb->start_time));
 
     if(cb->fire_and_forget)
     {
@@ -473,8 +475,6 @@ ERL_NIF_TERM nif_cass_session_execute_batch(ErlNifEnv* env, int argc, const ERL_
 
     if(callback == NULL)
         return make_error(env, erlcass::kFailedToCreateCallbackInfoMsg);
-
-    callback->start_time = get_microseconds();
 
     CassFuture* future = cass_session_execute_batch(enif_session->session, batch.get());
     error = cass_future_set_callback(future, on_statement_executed, callback);
