@@ -149,7 +149,7 @@ void on_statement_executed(CassFuture* future, void* user_data)
     cass_bool_t has_more_pages = cass_false;
     uint64_t now = get_microseconds();
 
-    printf("execution took %lu us", now - cb->start_time);
+    printf("execution took %lu us\n", now - cb->start_time);
 
     if(cb->fire_and_forget)
     {
