@@ -180,13 +180,13 @@ template <typename T> ERL_NIF_TERM cass_set_from_nif(ErlNifEnv* env, T obj, size
         case CASS_VALUE_TYPE_COUNTER:
         case CASS_VALUE_TYPE_BIGINT:
         {
-            long long_value = 0;
-            double double_value = 0;
+            cass_int64_t long_value = 0;
+            cass_double_t double_value = 0;
 
             if(enif_get_int64(env, value, &long_value )) {
                 return cass_error_to_nif_term(env, fun.set_int64(obj, index, long_value));
             } else if(enif_get_double(env, value, &double_value )) {
-                long_value = static_cast<long>(double_value);
+                long_value = static_cast<cass_int64_t>(double_value);
                 return cass_error_to_nif_term(env, fun.set_int64(obj, index, long_value));
             }
             
@@ -217,13 +217,13 @@ template <typename T> ERL_NIF_TERM cass_set_from_nif(ErlNifEnv* env, T obj, size
         case CASS_VALUE_TYPE_FLOAT:
         case CASS_VALUE_TYPE_DOUBLE:
         {
-            double val_double = 0;
-            long val_long = 0;
+            cass_double_t val_double = 0;
+            cass_int64_t val_long = 0;
             bool success = false;
             if(enif_get_double(env, value, &val_double)) {
                 success = true;
             } else if (enif_get_int64(env, value, &val_long )) {
-                val_double = static_cast<double>(val_long);
+                val_double = static_cast<cass_double_t>(val_long);
                 success = true;
             }
 
