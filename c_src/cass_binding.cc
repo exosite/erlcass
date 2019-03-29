@@ -180,8 +180,8 @@ template <typename T> ERL_NIF_TERM cass_set_from_nif(ErlNifEnv* env, T obj, size
         case CASS_VALUE_TYPE_COUNTER:
         case CASS_VALUE_TYPE_BIGINT:
         {
-            cass_int64_t long_value = 0;
-            cass_double_t double_value = 0;
+            long long long_value = 0;
+            double double_value = 0;
 
             if(enif_get_int64(env, value, &long_value )) {
                 printf("binding int64 %li\n", long_value);
@@ -218,8 +218,8 @@ template <typename T> ERL_NIF_TERM cass_set_from_nif(ErlNifEnv* env, T obj, size
         case CASS_VALUE_TYPE_FLOAT:
         case CASS_VALUE_TYPE_DOUBLE:
         {
-            cass_double_t val_double = 0;
-            cass_int64_t val_long = 0;
+            double val_double = 0;
+            long long val_long = 0;
             bool success = false;
             if(enif_get_double(env, value, &val_double)) {
                 success = true;
