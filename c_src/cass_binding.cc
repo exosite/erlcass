@@ -117,6 +117,7 @@ ERL_NIF_TERM nif_list_to_cass_collection(ErlNifEnv* env, ERL_NIF_TERM list, cons
 
 template <typename T> ERL_NIF_TERM cass_set_from_nif(ErlNifEnv* env, T obj, size_t index, set_data_functions<T> fun, const datastax::internal::core::DataType* data_type, ERL_NIF_TERM value)
 {
+    printf("value type%d\n", data_type->value_type());
     switch (data_type->value_type())
     {
         case CASS_VALUE_TYPE_VARCHAR:
