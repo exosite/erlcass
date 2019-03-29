@@ -10,7 +10,6 @@
 
 #include <string.h>
 #include <memory>
-#include <chrono>
 
 struct enif_cass_session
 {
@@ -24,7 +23,6 @@ struct callback_info
     ERL_NIF_TERM arguments;
     bool fire_and_forget;
     CassStatement* paged_statment;
-    uint64_t start_time;
 };
 
 struct callback_statement_info
