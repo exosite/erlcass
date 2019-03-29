@@ -117,7 +117,6 @@ ERL_NIF_TERM nif_list_to_cass_collection(ErlNifEnv* env, ERL_NIF_TERM list, cons
 
 template <typename T> ERL_NIF_TERM cass_set_from_nif(ErlNifEnv* env, T obj, size_t index, set_data_functions<T> fun, const cass::DataType* data_type, ERL_NIF_TERM value)
 {
-    printf("value type%d\n", data_type->value_type());
     switch (data_type->value_type())
     {
         case CASS_VALUE_TYPE_VARCHAR:
@@ -181,15 +180,13 @@ template <typename T> ERL_NIF_TERM cass_set_from_nif(ErlNifEnv* env, T obj, size
         case CASS_VALUE_TYPE_COUNTER:
         case CASS_VALUE_TYPE_BIGINT:
         {
-            long long_value = 0;
-            double double_value = 0;
+            cass_int64_t long_value = 0;
+            cass_double_t double_value = 0;
 
             if(enif_get_int64(env, value, &long_value )) {
-                printf("here1 %li \n", long_value);
                 return cass_error_to_nif_term(env, fun.set_int64(obj, index, long_value));
             } else if(enif_get_double(env, value, &double_value )) {
-                printf("here2\n");
-                long_value = static_cast<long>(double_value);
+                long_value = static_cast<cass_int64_t>(double_value);
                 return cass_error_to_nif_term(env, fun.set_int64(obj, index, long_value));
             }
             
