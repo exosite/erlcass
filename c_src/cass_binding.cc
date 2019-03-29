@@ -184,6 +184,7 @@ template <typename T> ERL_NIF_TERM cass_set_from_nif(ErlNifEnv* env, T obj, size
             cass_double_t double_value = 0;
 
             if(enif_get_int64(env, value, &long_value )) {
+                printf("binding int64 %li\n", long_value);
                 return cass_error_to_nif_term(env, fun.set_int64(obj, index, long_value));
             } else if(enif_get_double(env, value, &double_value )) {
                 long_value = static_cast<cass_int64_t>(double_value);
