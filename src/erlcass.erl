@@ -504,7 +504,7 @@ receive_session_connect(Keyspace, Self) ->
     receive
         {session_connected, Self, {error, MissingKeyspaceError}} ->
             {error, missing_keyspace};
-                            
+
         {session_connected, Self, Result} ->
             ?INFO_MSG("session ~p connection complete result: ~p", [Self, Result]),
             ok

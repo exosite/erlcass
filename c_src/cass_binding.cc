@@ -131,7 +131,7 @@ template <typename T> ERL_NIF_TERM cass_set_from_nif(ErlNifEnv* env, T obj, size
             } else if((atom_size = get_atom(env, value, atom, MAX_ATOM_SIZE)) && atom_size > 0) {
                 return cass_error_to_nif_term(env, fun.set_string(obj, index, atom, atom_size - 1));
             }
-            
+
             return make_badarg(env);
         }
 
@@ -181,16 +181,10 @@ template <typename T> ERL_NIF_TERM cass_set_from_nif(ErlNifEnv* env, T obj, size
         case CASS_VALUE_TYPE_BIGINT:
         {
             long long_value = 0;
-            double double_value = 0;
+            if(!enif_get_int64(env, value, &long_value ))
+                return make_badarg(env);
 
-            if(enif_get_int64(env, value, &long_value )) {
-                return cass_error_to_nif_term(env, fun.set_int64(obj, index, long_value));
-            } else if(enif_get_double(env, value, &double_value )) {
-                long_value = static_cast<long>(double_value);
-                return cass_error_to_nif_term(env, fun.set_int64(obj, index, long_value));
-            }
-            
-            return make_badarg(env);
+            return cass_error_to_nif_term(env, fun.set_int64(obj, index, long_value));
         }
 
         case CASS_VALUE_TYPE_VARINT:
