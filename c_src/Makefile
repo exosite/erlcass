@@ -53,6 +53,9 @@ ifeq ($(UNAME_SYS), darwin)
 				-Wl,-U,_enif_make_tuple_from_array \
 				-Wl,-U,_enif_make_uint \
 				-Wl,-U,_enif_make_ulong
+else
+	# Needed for gcc-8
+	CXXFLAGS+= -Wno-class-memaccess
 endif
 
 CXXFLAGS+= -O3 -std=c++11 -Wextra -Werror -fno-rtti \
