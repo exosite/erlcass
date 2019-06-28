@@ -62,7 +62,7 @@ case $OS in
             *) echo "Your system $KERNEL is not supported"
         esac
         export CFLAGS="-fPIC"
-        export CXXFLAGS="-fPIC -Wno-class-memaccess -Wno-error=deprecated-copy"
+        export CXXFLAGS="-fPIC -Wno-class-memaccess -Wno-deprecated-copy"
     ;;
 
     Darwin)
