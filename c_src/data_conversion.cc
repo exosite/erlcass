@@ -441,8 +441,8 @@ ERL_NIF_TERM cass_result_to_erlang_term(ErlNifEnv* env, const CassResult* result
     if(rows_count == 0)
         return enif_make_tuple3(env, ATOMS.atomOk, column_data, enif_make_list(env, 0));
 
-    ERL_NIF_TERM nif_array_columns[columns_count];
-    ERL_NIF_TERM nif_array_rows[rows_count];
+    std::unique_ptr<ERL_NIF_TERM[]> nif_array_columns(new ERL_NIF_TERM[columns_count]);
+    std::unique_ptr<ERL_NIF_TERM[]> nif_array_rows(new ERL_NIF_TERM[rows_count]);
 
     scoped_ptr(iterator, CassIterator, cass_iterator_from_result(result), cass_iterator_free);
 
@@ -454,10 +454,10 @@ ERL_NIF_TERM cass_result_to_erlang_term(ErlNifEnv* env, const CassResult* result
         for(size_t i = 0; i < columns_count; i++)
             nif_array_columns[i] = cass_value_to_nif_term(env, cass_row_get_column(row, i));
 
-        nif_array_rows[row_index++] = enif_make_list_from_array(env, nif_array_columns, columns_count);
+        nif_array_rows[row_index++] = enif_make_list_from_array(env, nif_array_columns.get(), columns_count);
     }
 
-    ERL_NIF_TERM rows = enif_make_list_from_array(env, nif_array_rows, rows_count);
+    ERL_NIF_TERM rows = enif_make_list_from_array(env, nif_array_rows.get(), rows_count);
     return enif_make_tuple3(env, ATOMS.atomOk, column_data, rows);
 }
 
