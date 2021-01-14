@@ -1,5 +1,9 @@
 ### Changelog:
 
+##### v4.0.2-1
+
+- Remove lager and its heavyweight dependencies
+
 ##### v4.0.2
 
 - Add support for Paged queries (thanks to Jesper Lundgren - https://github.com/cleaton)
