@@ -1,5 +1,9 @@
 ### Changelog:
 
+##### v3.2.4-1
+
+- Remove lager and its heavyweight dependencies
+
 ##### v3.2.4
 
 - Fix a critical memory issue discovered by running the VM in debug mode.
